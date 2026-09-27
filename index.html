@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>リスニング つまずきメモ｜英検2級</title>
+<style>
+  :root{
+    --gold:#c9a227; --gold-d:#8a7100; --gold-l:#fffbe8;
+    --slate:#5a7484; --slate-d:#3a4b57; --slate-l:#e3eef5;
+    --ink:#28323a; --line:#e2dcc8; --paper:#fdfcf7;
+    --green:#1f7a4d; --green-l:#eafaf0; --red:#d64545; --red-l:#fdeeec;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{
+    margin:0;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    background:var(--paper);color:var(--ink);line-height:1.6;
+    padding-bottom:120px;
+  }
+  header{
+    background:linear-gradient(135deg,var(--slate),var(--slate-d));
+    color:#fff;padding:18px 16px 16px;position:sticky;top:0;z-index:50;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  header h1{margin:0;font-size:19px;letter-spacing:.02em}
+  header .sub{font-size:12px;opacity:.85;margin-top:3px}
+  .wrap{max-width:640px;margin:0 auto;padding:14px}
+
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);
+  }
+  .name-card{border-left:5px solid var(--gold)}
+  label.ttl{display:block;font-size:12px;font-weight:700;color:var(--slate-d);margin-bottom:6px}
+  input[type=text],select,textarea{
+    width:100%;font-size:16px;padding:11px 12px;border:1.5px solid var(--line);
+    border-radius:10px;background:#fff;color:var(--ink);font-family:inherit;
+  }
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+  textarea{resize:vertical;min-height:42px}
+
+  .row{
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    margin-bottom:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04);
+    transition:opacity .2s;
+  }
+  .row-head{
+    display:flex;align-items:center;gap:8px;padding:9px 12px;
+    background:var(--slate-l);cursor:pointer;user-select:none;
+  }
+  .row-num{
+    flex:0 0 auto;width:26px;height:26px;border-radius:50%;
+    background:var(--slate);color:#fff;font-size:13px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .row-summary{flex:1 1 auto;font-size:13px;color:var(--slate-d);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+  .row-summary .empty{color:#a9b4bc}
+  .chev{flex:0 0 auto;color:var(--slate);transition:transform .2s;font-size:13px}
+  .row.open .chev{transform:rotate(90deg)}
+  .row.filled .row-num{background:var(--gold)}
+  .row-body{display:none;padding:12px}
+  .row.open .row-body{display:block}
+  .field{margin-bottom:11px}
+  .field:last-child{margin-bottom:0}
+
+  .reason-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+  .reason-grid .rbtn{
+    border:1.5px solid var(--line);border-radius:10px;padding:9px 6px;
+    text-align:center;font-size:13px;cursor:pointer;background:#fff;color:var(--slate-d);
+    font-weight:600;transition:all .12s;
+  }
+  .reason-grid .rbtn.on{background:var(--gold);border-color:var(--gold);color:#fff}
+
+  .btn{
+    border:none;border-radius:12px;font-size:15px;font-weight:700;
+    padding:13px 16px;cursor:pointer;font-family:inherit;
+  }
+  .btn-ghost{background:#fff;border:1.5px dashed var(--slate);color:var(--slate-d);width:100%}
+  .btn-del{background:var(--red-l);color:var(--red);font-size:13px;padding:8px 12px;border-radius:9px}
+
+  .footbar{
+    position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);
+    border-top:1px solid var(--line);padding:10px 14px;z-index:60;
+    box-shadow:0 -2px 12px rgba(0,0,0,.08);backdrop-filter:blur(4px);
+  }
+  .footbar .inner{max-width:640px;margin:0 auto;display:flex;gap:10px}
+  .btn-main{flex:1;background:linear-gradient(135deg,var(--gold),var(--gold-d));color:#fff}
+  .btn-sub{flex:0 0 auto;background:var(--slate-l);color:var(--slate-d)}
+
+  /* modal */
+  .modal-bg{
+    display:none;position:fixed;inset:0;background:rgba(20,25,30,.55);z-index:100;
+    align-items:flex-end;justify-content:center;
+  }
+  .modal-bg.show{display:flex}
+  .modal{
+    background:#fff;width:100%;max-width:640px;border-radius:18px 18px 0 0;
+    padding:18px 16px 20px;max-height:88vh;overflow-y:auto;
+    animation:up .22s ease;
+  }
+  @keyframes up{from{transform:translateY(40px);opacity:.6}to{transform:none;opacity:1}}
+  .modal h2{margin:0 0 4px;font-size:17px;color:var(--slate-d)}
+  .modal .hint{font-size:12px;color:#8a95a0;margin:0 0 12px}
+  .result-box{
+    background:var(--gold-l);border:1px solid var(--line);border-radius:12px;
+    padding:14px;font-size:14px;white-space:pre-wrap;word-break:break-word;
+    max-height:44vh;overflow-y:auto;line-height:1.7;
+  }
+  .modal-btns{display:flex;gap:10px;margin-top:14px}
+  .btn-copy{flex:1;background:linear-gradient(135deg,var(--green),#155f3b);color:#fff}
+  .btn-close{flex:0 0 auto;background:var(--slate-l);color:var(--slate-d)}
+  .copied{
+    text-align:center;color:var(--green);font-weight:700;font-size:14px;
+    margin-top:10px;height:18px;
+  }
+  .empty-note{font-size:12px;color:#a9b4bc;text-align:center;margin:8px 0 2px}
+  .save-note{font-size:11px;color:#a9b4bc;text-align:center;margin-top:2px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎧 リスニング つまずきメモ</h1>
+  <div class="sub">英検2級｜聞き取れなかったところを書いて、先生に送ろう</div>
+</header>
+
+<div class="wrap">
+  <div class="card name-card">
+    <label class="ttl">なまえ（先生に届いたとき分かるように）</label>
+    <input type="text" id="studentName" placeholder="例：氏名" autocomplete="off">
+  </div>
+
+  <div class="card" style="background:var(--slate-l);border:none">
+    <div style="font-size:13px;color:var(--slate-d);line-height:1.7">
+      聞き取れなかった問題ごとに、下の欄を1つ使ってメモしよう。<br>
+      各欄をタップ → ①つまずいた理由 ②聞き取れなかった単語・表現 ③ひとこと（任意）を入力。<br>
+      終わったら下の <b>「まとめをコピー」</b> を押して、LINEで先生に送ってね📩
+    </div>
+  </div>
+
+  <div id="rows"></div>
+
+  <button class="btn btn-ghost" id="addBtn">＋ 欄を追加する</button>
+  <div class="save-note" id="saveNote">入力は自動でこの端末に保存されます</div>
+</div>
+
+<div class="footbar">
+  <div class="inner">
+    <button class="btn btn-sub" id="clearBtn">クリア</button>
+    <button class="btn btn-main" id="finishBtn">まとめをコピー ▶</button>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h2>先生に送るまとめ</h2>
+    <p class="hint">下の「コピー」を押して、LINEに貼り付けて送ってね。</p>
+    <div class="result-box" id="resultBox"></div>
+    <div class="modal-btns">
+      <button class="btn btn-close" id="closeBtn">閉じる</button>
+      <button class="btn btn-copy" id="copyBtn">📋 コピー</button>
+    </div>
+    <div class="copied" id="copiedMsg"></div>
+  </div>
+</div>
+
+<script>
+const REASONS = [
+  {key:"word",  label:"単語がわからない"},
+  {key:"sound", label:"音が聞き取れない"},
+  {key:"other", label:"その他"},
+];
+const START_ROWS = 25;
+const STORE_KEY = "eiken2-listening-report-v1";
+
+let data = { name:"", rows:[] };
+const rowsEl = document.getElementById("rows");
+
+function load(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw){ data = JSON.parse(raw); }
+  }catch(e){}
+  if(!data.rows || !data.rows.length){
+    data.rows = [];
+    for(let i=0;i<START_ROWS;i++) data.rows.push(blankRow());
+  }
+  document.getElementById("studentName").value = data.name || "";
+}
+function blankRow(){ return {reason:"", word:"", memo:""}; }
+function save(){
+  data.name = document.getElementById("studentName").value;
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(data)); }catch(e){}
+}
+
+function rowIsFilled(r){ return r.reason || (r.word||"").trim() || (r.memo||"").trim(); }
+
+function summaryText(r){
+  const parts = [];
+  if(r.reason){
+    const rr = REASONS.find(x=>x.key===r.reason);
+    if(rr) parts.push(rr.label);
+  }
+  if((r.word||"").trim()) parts.push("「"+r.word.trim()+"」");
+  if(!parts.length && (r.memo||"").trim()) parts.push(r.memo.trim());
+  return parts.length ? parts.join(" / ") : null;
+}
+
+function render(){
+  rowsEl.innerHTML = "";
+  data.rows.forEach((r, idx)=>{
+    const filled = rowIsFilled(r);
+    const div = document.createElement("div");
+    div.className = "row" + (filled?" filled":"");
+    const sum = summaryText(r);
+
+    const head = document.createElement("div");
+    head.className = "row-head";
+    head.innerHTML =
+      '<div class="row-num">'+(idx+1)+'</div>'+
+      '<div class="row-summary">'+(sum? escapeHtml(sum) : '<span class="empty">タップして入力</span>')+'</div>'+
+      '<div class="chev">▶</div>';
+    head.addEventListener("click", ()=>{
+      div.classList.toggle("open");
+    });
+
+    const body = document.createElement("div");
+    body.className = "row-body";
+
+    // reason
+    const f1 = document.createElement("div"); f1.className="field";
+    f1.innerHTML = '<label class="ttl">① つまずいた理由</label>';
+    const grid = document.createElement("div"); grid.className="reason-grid";
+    REASONS.forEach(rs=>{
+      const b = document.createElement("div");
+      b.className = "rbtn"+(r.reason===rs.key?" on":"");
+      b.textContent = rs.label;
+      b.addEventListener("click", ()=>{
+        r.reason = (r.reason===rs.key)? "" : rs.key;
+        save(); render(); reopen(idx);
+      });
+      grid.appendChild(b);
+    });
+    f1.appendChild(grid);
+
+    // word
+    const f2 = document.createElement("div"); f2.className="field";
+    f2.innerHTML = '<label class="ttl">② 聞き取れなかった単語・表現</label>';
+    const inp = document.createElement("input");
+    inp.type="text"; inp.value=r.word||""; inp.placeholder="例：budget / interrupt";
+    inp.addEventListener("input", ()=>{ r.word=inp.value; save(); updateHead(head,r,idx); });
+    f2.appendChild(inp);
+
+    // memo
+    const f3 = document.createElement("div"); f3.className="field";
+    f3.innerHTML = '<label class="ttl">③ ひとことメモ（任意）</label>';
+    const ta = document.createElement("textarea");
+    ta.value=r.memo||""; ta.placeholder="例：話の場面が切り替わったところで分からなくなった";
+    ta.addEventListener("input", ()=>{ r.memo=ta.value; save(); updateHead(head,r,idx); });
+    f3.appendChild(ta);
+
+    // delete
+    const del = document.createElement("button");
+    del.className="btn btn-del"; del.textContent="この欄を消す";
+    del.addEventListener("click", ()=>{
+      data.rows.splice(idx,1); save(); render();
+    });
+
+    body.appendChild(f1); body.appendChild(f2); body.appendChild(f3); body.appendChild(del);
+    div.appendChild(head); div.appendChild(body);
+    rowsEl.appendChild(div);
+  });
+}
+
+function updateHead(head,r,idx){
+  const sum = summaryText(r);
+  head.querySelector(".row-summary").innerHTML =
+    sum? escapeHtml(sum) : '<span class="empty">タップして入力</span>';
+  const row = head.parentElement;
+  if(rowIsFilled(r)) row.classList.add("filled"); else row.classList.remove("filled");
+}
+function reopen(idx){
+  const rows = rowsEl.querySelectorAll(".row");
+  if(rows[idx]) rows[idx].classList.add("open");
+}
+function escapeHtml(s){ return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+document.getElementById("studentName").addEventListener("input", save);
+
+document.getElementById("addBtn").addEventListener("click", ()=>{
+  data.rows.push(blankRow()); save(); render();
+  const rows = rowsEl.querySelectorAll(".row");
+  const last = rows[rows.length-1];
+  if(last){ last.classList.add("open"); last.scrollIntoView({behavior:"smooth",block:"center"}); }
+});
+
+document.getElementById("clearBtn").addEventListener("click", ()=>{
+  if(confirm("入力した内容をすべて消して、最初からやり直しますか？")){
+    localStorage.removeItem(STORE_KEY);
+    data = { name:"", rows:[] };
+    document.getElementById("studentName").value="";
+    load(); render();
+  }
+});
+
+document.getElementById("finishBtn").addEventListener("click", ()=>{
+  const name = document.getElementById("studentName").value.trim();
+  const filled = data.rows.filter(rowIsFilled);
+  const today = new Date();
+  const d = today.getFullYear()+"/"+(today.getMonth()+1)+"/"+today.getDate();
+
+  let txt = "【リスニングつまずきメモ】\n";
+  txt += "名前：" + (name||"（未記入）") + "\n";
+  txt += "日付：" + d + "\n";
+  txt += "つまずき件数：" + filled.length + "件\n";
+  txt += "──────────\n";
+
+  if(!filled.length){
+    txt += "（入力なし）\n";
+  }else{
+    filled.forEach((r,i)=>{
+      const rr = REASONS.find(x=>x.key===r.reason);
+      txt += (i+1)+". ";
+      txt += rr? "["+rr.label+"] " : "";
+      if((r.word||"").trim()) txt += r.word.trim();
+      txt += "\n";
+      if((r.memo||"").trim()) txt += "　→ "+r.memo.trim()+"\n";
+    });
+  }
+  txt += "──────────\n";
+  txt += "（このメモは自己申告アプリで作成）";
+
+  document.getElementById("resultBox").textContent = txt;
+  document.getElementById("copiedMsg").textContent = "";
+  document.getElementById("modalBg").classList.add("show");
+});
+
+document.getElementById("closeBtn").addEventListener("click", ()=>{
+  document.getElementById("modalBg").classList.remove("show");
+});
+document.getElementById("modalBg").addEventListener("click",(e)=>{
+  if(e.target.id==="modalBg") document.getElementById("modalBg").classList.remove("show");
+});
+
+document.getElementById("copyBtn").addEventListener("click", async ()=>{
+  const txt = document.getElementById("resultBox").textContent;
+  const msg = document.getElementById("copiedMsg");
+  try{
+    await navigator.clipboard.writeText(txt);
+    msg.textContent = "✅ コピーしました！LINEに貼り付けて送ってね";
+  }catch(e){
+    // fallback
+    const ta=document.createElement("textarea"); ta.value=txt;
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); msg.textContent="✅ コピーしました！"; }
+    catch(e2){ msg.textContent="コピーできませんでした。長押しで選択してね"; }
+    document.body.removeChild(ta);
+  }
+});
+
+load(); render();
+</script>
+</body>
+</html>
